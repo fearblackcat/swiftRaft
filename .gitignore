@@ -1,0 +1,8 @@
+.*
+!/.gitignore
+vendor/
+.idea/
+.statsd/
+.idea/vcs.xml
+*.swp
+
