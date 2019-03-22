@@ -7,9 +7,9 @@ import (
 	"os"
 	"sync"
 
-	"github.com/fearblackcat/smartRaft/utils/pkg/crc"
-	"github.com/fearblackcat/smartRaft/utils/pkg/ioutil"
-	"github.com/fearblackcat/smartRaft/utils/api/wal/walpb"
+	"github.com/fearblackcat/swiftRaft/utils/api/wal/walpb"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/crc"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/ioutil"
 )
 
 // walPageBytes is the alignment for flushing records to the backing Writer.

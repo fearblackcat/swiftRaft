@@ -18,7 +18,7 @@ import (
 	"sort"
 	"testing"
 
-	pb "github.com/fearblackcat/smartRaft/raft/raftpb"
+	pb "github.com/fearblackcat/swiftRaft/raft/raftpb"
 )
 
 func TestFollowerUpdateTermFromMessage(t *testing.T) {

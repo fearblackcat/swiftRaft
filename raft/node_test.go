@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/fearblackcat/smartRaft/raft/raftpb"
-	"github.com/fearblackcat/smartRaft/utils/pkg/testutil"
+	"github.com/fearblackcat/swiftRaft/raft/raftpb"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/testutil"
 )
 
 // readyWithTimeout selects from n.Ready() with a 1-second timeout. It

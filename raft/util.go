@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 
-	pb "github.com/fearblackcat/smartRaft/raft/raftpb"
+	pb "github.com/fearblackcat/swiftRaft/raft/raftpb"
 )
 
 func (st StateType) MarshalJSON() ([]byte, error) {

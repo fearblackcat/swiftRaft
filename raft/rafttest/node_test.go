@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/fearblackcat/smartRaft/raft"
+	"github.com/fearblackcat/swiftRaft/raft"
 )
 
 func TestBasicProgress(t *testing.T) {

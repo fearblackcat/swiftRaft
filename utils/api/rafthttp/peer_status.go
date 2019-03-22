@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 
-	"git.xiaojukeji.com/gulfstream/dcron/workflow/logtool"
-	"github.com/fearblackcat/smartRaft/utils/pkg/types"
+	"github.com/fearblackcat/swiftRaft/utils/logtool"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/types"
 )
 
 type failureType struct {

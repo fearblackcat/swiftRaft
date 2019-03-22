@@ -3,7 +3,7 @@ package raft
 import (
 	"errors"
 
-	pb "github.com/fearblackcat/smartRaft/raft/raftpb"
+	pb "github.com/fearblackcat/swiftRaft/raft/raftpb"
 )
 
 // ErrStepLocalMsg is returned when try to step a local raft message

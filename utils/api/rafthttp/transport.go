@@ -1,17 +1,3 @@
-// Copyright 2015 The etcd Authors
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package rafthttp
 
 import (
@@ -20,21 +6,21 @@ import (
 	"sync"
 	"time"
 
-	"github.com/fearblackcat/smartRaft/utils/api/snap"
-	stats "github.com/fearblackcat/smartRaft/utils/api/v2stats"
-	"github.com/fearblackcat/smartRaft/utils/pkg/logutil"
-	"github.com/fearblackcat/smartRaft/utils/pkg/transport"
-	"github.com/fearblackcat/smartRaft/utils/pkg/types"
-	"github.com/fearblackcat/smartRaft/raft"
-	"github.com/fearblackcat/smartRaft/raft/raftpb"
-	"git.xiaojukeji.com/gulfstream/dcron/workflow/logtool"
+	"github.com/fearblackcat/swiftRaft/raft"
+	"github.com/fearblackcat/swiftRaft/raft/raftpb"
+	"github.com/fearblackcat/swiftRaft/utils/api/snap"
+	stats "github.com/fearblackcat/swiftRaft/utils/api/v2stats"
+	"github.com/fearblackcat/swiftRaft/utils/logtool"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/logutil"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/transport"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/types"
 
 	"github.com/coreos/pkg/capnslog"
 	"github.com/xiang90/probing"
 	"golang.org/x/time/rate"
 )
 
-var plog = logutil.NewMergeLogger(capnslog.NewPackageLogger("git.xiaojukeji.com/gulfstream/dcron", "rafthttp"))
+var plog = logutil.NewMergeLogger(capnslog.NewPackageLogger("github.com/fearblackcat/swiftRaft", "utils/api/rafthttp"))
 
 type Raft interface {
 	Process(ctx context.Context, m raftpb.Message) error
@@ -284,7 +270,7 @@ func (t *Transport) AddRemote(id types.ID, us []string) {
 	if err != nil {
 		if t.Logger != nil {
 			t.Logger.Panic("failed NewURLs", map[string]interface{}{
-				"urls": us,
+				"urls":  us,
 				"error": err,
 			})
 		} else {
@@ -295,8 +281,8 @@ func (t *Transport) AddRemote(id types.ID, us []string) {
 
 	if t.Logger != nil {
 		t.Logger.Info("added new remote peer", map[string]interface{}{
-			"local-member-id": t.ID.String(),
-			"remote-peer-id": id.String(),
+			"local-member-id":  t.ID.String(),
+			"remote-peer-id":   id.String(),
 			"remote-peer-urls": us,
 		})
 	}
@@ -316,7 +302,7 @@ func (t *Transport) AddPeer(id types.ID, us []string) {
 	if err != nil {
 		if t.Logger != nil {
 			t.Logger.Panic("failed NewURLs", map[string]interface{}{
-				"urls": us,
+				"urls":  us,
 				"error": err,
 			})
 		} else {
@@ -330,8 +316,8 @@ func (t *Transport) AddPeer(id types.ID, us []string) {
 
 	if t.Logger != nil {
 		t.Logger.Info("added remote peer", map[string]interface{}{
-			"local-member-id": t.ID.String(),
-			"remote-peer-id": id.String(),
+			"local-member-id":  t.ID.String(),
+			"remote-peer-id":   id.String(),
 			"remote-peer-urls": us,
 		})
 	} else {
@@ -373,7 +359,7 @@ func (t *Transport) removePeer(id types.ID) {
 
 	if t.Logger != nil {
 		t.Logger.Info("removed remote peer", map[string]interface{}{
-			"local-member-id": t.ID.String(),
+			"local-member-id":        t.ID.String(),
 			"removed-remote-peer-id": id.String(),
 		})
 	} else {
@@ -392,7 +378,7 @@ func (t *Transport) UpdatePeer(id types.ID, us []string) {
 	if err != nil {
 		if t.Logger != nil {
 			t.Logger.Panic("failed NewURLs", map[string]interface{}{
-				"urls": us,
+				"urls":  us,
 				"error": err,
 			})
 		} else {
@@ -408,8 +394,8 @@ func (t *Transport) UpdatePeer(id types.ID, us []string) {
 
 	if t.Logger != nil {
 		t.Logger.Info("updated remote peer", map[string]interface{}{
-			"local-member-id": t.ID.String(),
-			"updated-remote-peer-id": id.String(),
+			"local-member-id":          t.ID.String(),
+			"updated-remote-peer-id":   id.String(),
 			"updated-remote-peer-urls": us,
 		})
 	} else {

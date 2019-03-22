@@ -10,13 +10,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/fearblackcat/smartRaft/raft/raftpb"
-	stats "github.com/fearblackcat/smartRaft/utils/api/v2stats"
-	"github.com/fearblackcat/smartRaft/utils/pkg/testutil"
-	"github.com/fearblackcat/smartRaft/utils/pkg/types"
-	"github.com/fearblackcat/smartRaft/version"
-
-	"go.uber.org/zap"
+	"github.com/fearblackcat/swiftRaft/raft/raftpb"
+	stats "github.com/fearblackcat/swiftRaft/utils/api/v2stats"
+	"github.com/fearblackcat/swiftRaft/utils/logtool"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/testutil"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/types"
+	"github.com/fearblackcat/swiftRaft/version"
 )
 
 // TestPipelineSend tests that pipeline could send data using roundtripper
@@ -289,7 +288,7 @@ func startTestPipeline(tr *Transport, picker *urlPicker) *pipeline {
 		peerID:        types.ID(1),
 		tr:            tr,
 		picker:        picker,
-		status:        newPeerStatus(zap.NewExample(), tr.ID, types.ID(1)),
+		status:        newPeerStatus(logtool.RLog, tr.ID, types.ID(1)),
 		raft:          &fakeRaft{},
 		followerStats: &stats.FollowerStats{},
 		errorc:        make(chan error, 1),

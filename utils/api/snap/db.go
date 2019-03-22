@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/fearblackcat/smartRaft/utils/pkg/fileutil"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/fileutil"
 
 	humanize "github.com/dustin/go-humanize"
 )

@@ -4,8 +4,8 @@ import (
 	"errors"
 	"sync"
 
-	pb "github.com/fearblackcat/smartRaft/raft/raftpb"
-	"git.xiaojukeji.com/gulfstream/dcron/workflow/logtool"
+	pb "github.com/fearblackcat/swiftRaft/raft/raftpb"
+	"github.com/fearblackcat/swiftRaft/utils/logtool"
 )
 
 // ErrCompacted is returned by Storage.Entries/Compact when a requested
@@ -101,7 +101,7 @@ func (ms *MemoryStorage) Entries(lo, hi, maxSize uint64) ([]pb.Entry, error) {
 	}
 	if hi > ms.lastIndex()+1 {
 		logtool.RLog.Error("entries' hi is out of bound lastindex", map[string]interface{}{
-			"hi": hi,
+			"hi":        hi,
 			"lastindex": ms.lastIndex(),
 		})
 	}
@@ -189,7 +189,7 @@ func (ms *MemoryStorage) CreateSnapshot(i uint64, cs *pb.ConfState, data []byte)
 	offset := ms.ents[0].Index
 	if i > ms.lastIndex() {
 		logtool.RLog.Error("snapshot is out of bound lastindex", map[string]interface{}{
-			"snpashot": i,
+			"snpashot":  i,
 			"lastindex": ms.lastIndex(),
 		})
 	}
@@ -215,7 +215,7 @@ func (ms *MemoryStorage) Compact(compactIndex uint64) error {
 	}
 	if compactIndex > ms.lastIndex() {
 		logtool.RLog.Error("compact is out of bound lastindex", map[string]interface{}{
-			"compact": compactIndex,
+			"compact":   compactIndex,
 			"lastindex": ms.lastIndex(),
 		})
 	}
@@ -261,7 +261,7 @@ func (ms *MemoryStorage) Append(entries []pb.Entry) error {
 		ms.ents = append(ms.ents, entries...)
 	default:
 		logtool.RLog.Error("missing log entry [last, append at]",
-			map[string]interface{}{"last":ms.lastIndex(), "append at": entries[0].Index})
+			map[string]interface{}{"last": ms.lastIndex(), "append at": entries[0].Index})
 	}
 	return nil
 }

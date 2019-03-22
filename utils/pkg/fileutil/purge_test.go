@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"go.uber.org/zap"
+	"github.com/fearblackcat/swiftRaft/utils/logtool"
 )
 
 func TestPurgeFile(t *testing.T) {
@@ -31,7 +31,7 @@ func TestPurgeFile(t *testing.T) {
 	stop, purgec := make(chan struct{}), make(chan string, 10)
 
 	// keep 3 most recent files
-	errch := purgeFile(zap.NewExample(), dir, "test", 3, time.Millisecond, stop, purgec)
+	errch := purgeFile(logtool.RLog, dir, "test", 3, time.Millisecond, stop, purgec)
 	select {
 	case f := <-purgec:
 		t.Errorf("unexpected purge on %q", f)
@@ -102,7 +102,7 @@ func TestPurgeFileHoldingLockFile(t *testing.T) {
 	}
 
 	stop, purgec := make(chan struct{}), make(chan string, 10)
-	errch := purgeFile(zap.NewExample(), dir, "test", 3, time.Millisecond, stop, purgec)
+	errch := purgeFile(logtool.RLog, dir, "test", 3, time.Millisecond, stop, purgec)
 
 	for i := 0; i < 5; i++ {
 		select {

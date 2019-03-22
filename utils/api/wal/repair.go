@@ -5,9 +5,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"git.xiaojukeji.com/gulfstream/dcron/workflow/logtool"
-	"github.com/fearblackcat/smartRaft/utils/api/wal/walpb"
-	"github.com/fearblackcat/smartRaft/utils/pkg/fileutil"
+	"github.com/fearblackcat/swiftRaft/utils/api/wal/walpb"
+	"github.com/fearblackcat/swiftRaft/utils/logtool"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/fileutil"
 )
 
 // Repair tries to repair ErrUnexpectedEOF in the

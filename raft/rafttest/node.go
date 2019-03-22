@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/fearblackcat/smartRaft/raft"
-	"github.com/fearblackcat/smartRaft/raft/raftpb"
+	"github.com/fearblackcat/swiftRaft/raft"
+	"github.com/fearblackcat/swiftRaft/raft/raftpb"
 )
 
 type node struct {

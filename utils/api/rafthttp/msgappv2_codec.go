@@ -6,10 +6,10 @@ import (
 	"io"
 	"time"
 
-	"github.com/fearblackcat/smartRaft/raft/raftpb"
-	stats "github.com/fearblackcat/smartRaft/utils/api/v2stats"
-	"github.com/fearblackcat/smartRaft/utils/pkg/pbutil"
-	"github.com/fearblackcat/smartRaft/utils/pkg/types"
+	"github.com/fearblackcat/swiftRaft/raft/raftpb"
+	stats "github.com/fearblackcat/swiftRaft/utils/api/v2stats"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/pbutil"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/types"
 )
 
 const (

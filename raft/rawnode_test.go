@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/fearblackcat/smartRaft/raft/raftpb"
+	"github.com/fearblackcat/swiftRaft/raft/raftpb"
 )
 
 // TestRawNodeStep ensures that RawNode.Step ignore local message.

@@ -1,6 +1,6 @@
 package rafthttp
 
-import "github.com/fearblackcat/smartRaft/raft/raftpb"
+import "github.com/fearblackcat/swiftRaft/raft/raftpb"
 
 type encoder interface {
 	// encode encodes the given message to an output stream.

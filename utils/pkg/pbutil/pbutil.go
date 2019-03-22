@@ -4,7 +4,7 @@ package pbutil
 import "github.com/coreos/pkg/capnslog"
 
 var (
-	plog = capnslog.NewPackageLogger("git.xiaojukeji.com/gulfstream/dcron", "pkg/pbutil")
+	plog = capnslog.NewPackageLogger("github.com/fearblackcat/swiftRaft", "utils/pkg/pbutil")
 )
 
 type Marshaler interface {

@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"git.xiaojukeji.com/gulfstream/dcron/workflow/logtool"
+	"github.com/fearblackcat/swiftRaft/utils/logtool"
 )
 
 func TestFilePipeline(t *testing.T) {

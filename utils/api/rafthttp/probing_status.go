@@ -3,7 +3,7 @@ package rafthttp
 import (
 	"time"
 
-	"git.xiaojukeji.com/gulfstream/dcron/workflow/logtool"
+	"github.com/fearblackcat/swiftRaft/utils/logtool"
 
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/xiang90/probing"
@@ -58,8 +58,8 @@ func monitorProbingStatus(lg *logtool.RLogHandle, s probing.Status, id string, r
 				if lg != nil {
 					lg.Warn("prober detected unhealthy status", map[string]interface{}{
 						"round-tripper-name": roundTripperName,
-						"remote-peer-id": id,
-						"rtt": s.SRTT(),
+						"remote-peer-id":     id,
+						"rtt":                s.SRTT(),
 					})
 				} else {
 					plog.Warningf("health check for peer %s could not connect: %v", id, s.Err())
@@ -72,9 +72,9 @@ func monitorProbingStatus(lg *logtool.RLogHandle, s probing.Status, id string, r
 				if lg != nil {
 					lg.Warn("prober found high clock drift", map[string]interface{}{
 						"round-tripper-name": roundTripperName,
-						"remote-peer-id": id,
-						"clock-drift": s.SRTT(),
-						"rtt": s.ClockDiff(),
+						"remote-peer-id":     id,
+						"clock-drift":        s.SRTT(),
+						"rtt":                s.ClockDiff(),
 					})
 				} else {
 					plog.Warningf("the clock difference against peer %s is too high [%v > %v]", id, s.ClockDiff(), time.Second)

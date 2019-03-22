@@ -7,10 +7,10 @@ import (
 	"io"
 	"sync"
 
-	"github.com/fearblackcat/smartRaft/raft/raftpb"
-	"github.com/fearblackcat/smartRaft/utils/api/wal/walpb"
-	"github.com/fearblackcat/smartRaft/utils/pkg/crc"
-	"github.com/fearblackcat/smartRaft/utils/pkg/pbutil"
+	"github.com/fearblackcat/swiftRaft/raft/raftpb"
+	"github.com/fearblackcat/swiftRaft/utils/api/wal/walpb"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/crc"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/pbutil"
 )
 
 const minSectorSize = 512

@@ -4,7 +4,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/fearblackcat/smartRaft/utils/pkg/fileutil"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/fileutil"
 )
 
 // WriteAndSyncFile behaves just like ioutil.WriteFile in the standard library,

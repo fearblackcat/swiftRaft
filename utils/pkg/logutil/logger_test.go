@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/fearblackcat/smartRaft/utils/pkg/logutil"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/logutil"
 
 	"google.golang.org/grpc/grpclog"
 )

@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/fearblackcat/smartRaft/utils/pkg/transport"
-	"github.com/fearblackcat/smartRaft/utils/pkg/types"
-	"github.com/fearblackcat/smartRaft/version"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/transport"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/types"
+	"github.com/fearblackcat/swiftRaft/version"
 
 	"github.com/coreos/go-semver/semver"
 )

@@ -5,9 +5,9 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/fearblackcat/smartRaft/raft/raftpb"
-	stats "github.com/fearblackcat/smartRaft/utils/api/v2stats"
-	"github.com/fearblackcat/smartRaft/utils/pkg/types"
+	"github.com/fearblackcat/swiftRaft/raft/raftpb"
+	stats "github.com/fearblackcat/swiftRaft/utils/api/v2stats"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/types"
 )
 
 func TestMsgAppV2(t *testing.T) {

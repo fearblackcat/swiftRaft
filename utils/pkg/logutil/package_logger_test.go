@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/fearblackcat/smartRaft/utils/pkg/logutil"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/logutil"
 
 	"github.com/coreos/pkg/capnslog"
 )
@@ -15,9 +15,9 @@ func TestPackageLogger(t *testing.T) {
 	buf := new(bytes.Buffer)
 	capnslog.SetFormatter(capnslog.NewDefaultFormatter(buf))
 
-	l := logutil.NewPackageLogger("git.xiaojukeji.com/gulfstream/dcron", "logger")
+	l := logutil.NewPackageLogger("github.com/fearblackcat/swiftRaft", "utils/pkg/logutil")
 
-	r := capnslog.MustRepoLogger("git.xiaojukeji.com/gulfstream/dcron")
+	r := capnslog.MustRepoLogger("github.com/fearblackcat/swiftRaft")
 	r.SetLogLevel(map[string]capnslog.LogLevel{"logger": capnslog.INFO})
 
 	l.Infof("hello world!")

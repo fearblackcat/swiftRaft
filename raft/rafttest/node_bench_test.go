@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/fearblackcat/smartRaft/raft"
+	"github.com/fearblackcat/swiftRaft/raft"
 )
 
 func BenchmarkProposal3Nodes(b *testing.B) {

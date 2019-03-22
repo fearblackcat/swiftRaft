@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	pb "github.com/fearblackcat/smartRaft/raft/raftpb"
+	pb "github.com/fearblackcat/swiftRaft/raft/raftpb"
 )
 
 // nextEnts returns the appliable entries and updates the applied index

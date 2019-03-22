@@ -4,7 +4,7 @@ import (
 	"net/url"
 	"sync"
 
-	"github.com/fearblackcat/smartRaft/utils/pkg/types"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/types"
 )
 
 type urlPicker struct {

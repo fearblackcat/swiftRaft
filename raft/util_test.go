@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	pb "github.com/fearblackcat/smartRaft/raft/raftpb"
+	pb "github.com/fearblackcat/swiftRaft/raft/raftpb"
 )
 
 var testFormatter EntryFormatter = func(data []byte) string {

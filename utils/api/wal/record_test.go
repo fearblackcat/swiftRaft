@@ -8,7 +8,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/fearblackcat/smartRaft/utils/api/wal/walpb"
+	"github.com/fearblackcat/swiftRaft/utils/api/wal/walpb"
 )
 
 var (

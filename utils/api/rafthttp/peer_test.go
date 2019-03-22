@@ -3,7 +3,7 @@ package rafthttp
 import (
 	"testing"
 
-	"github.com/fearblackcat/smartRaft/raft/raftpb"
+	"github.com/fearblackcat/swiftRaft/raft/raftpb"
 )
 
 func TestPeerPick(t *testing.T) {

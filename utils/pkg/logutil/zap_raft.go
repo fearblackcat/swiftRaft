@@ -3,7 +3,7 @@ package logutil
 import (
 	"errors"
 
-	"github.com/fearblackcat/smartRaft/raft"
+	"github.com/fearblackcat/swiftRaft/raft"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"

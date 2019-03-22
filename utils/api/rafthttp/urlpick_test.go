@@ -4,7 +4,7 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/fearblackcat/smartRaft/utils/pkg/testutil"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/testutil"
 )
 
 // TestURLPickerPickTwice tests that pick returns a possible url,

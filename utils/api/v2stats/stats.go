@@ -3,7 +3,7 @@ package v2stats
 
 import "github.com/coreos/pkg/capnslog"
 
-var plog = capnslog.NewPackageLogger("git.xiaojukeji.com/gulfstream/dcron", "consistency/stats")
+var plog = capnslog.NewPackageLogger("github.com/fearblackcat/swiftRaft", "utils/api/v2stats")
 
 type Stats interface {
 	// SelfStats returns the struct representing statistics of this server

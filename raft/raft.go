@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	pb "github.com/fearblackcat/smartRaft/raft/raftpb"
+	pb "github.com/fearblackcat/swiftRaft/raft/raftpb"
 )
 
 // None is a placeholder node ID used when there is no leader.

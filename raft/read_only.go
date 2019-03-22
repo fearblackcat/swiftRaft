@@ -1,6 +1,6 @@
 package raft
 
-import pb "github.com/fearblackcat/smartRaft/raft/raftpb"
+import pb "github.com/fearblackcat/swiftRaft/raft/raftpb"
 
 // ReadState provides state for read only query.
 // It's caller's responsibility to call ReadIndex first before getting

@@ -8,12 +8,12 @@ import (
 	"net/http"
 	"time"
 
-	"git.xiaojukeji.com/gulfstream/dcron/workflow/logtool"
-	"github.com/fearblackcat/smartRaft/raft"
-	"github.com/fearblackcat/smartRaft/utils/api/snap"
-	"github.com/fearblackcat/smartRaft/utils/pkg/httputil"
-	pioutil "github.com/fearblackcat/smartRaft/utils/pkg/ioutil"
-	"github.com/fearblackcat/smartRaft/utils/pkg/types"
+	"github.com/fearblackcat/swiftRaft/raft"
+	"github.com/fearblackcat/swiftRaft/utils/api/snap"
+	"github.com/fearblackcat/swiftRaft/utils/logtool"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/httputil"
+	pioutil "github.com/fearblackcat/swiftRaft/utils/pkg/ioutil"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/types"
 
 	"github.com/dustin/go-humanize"
 )

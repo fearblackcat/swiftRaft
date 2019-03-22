@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/fearblackcat/smartRaft/utils/pkg/testutil"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/testutil"
 )
 
 func TestParseInitialCluster(t *testing.T) {

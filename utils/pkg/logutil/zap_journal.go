@@ -10,7 +10,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/fearblackcat/smartRaft/utils/pkg/systemd"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/systemd"
 
 	"github.com/coreos/go-systemd/journal"
 	"go.uber.org/zap/zapcore"

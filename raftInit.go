@@ -1,90 +1,175 @@
-package smartRaft
+package swiftRaft
 
 import (
-	"context"
-	_ "net/http/pprof"
+	"crypto/sha1"
+	"encoding/binary"
+	"fmt"
+	"os"
 	"runtime/debug"
+	"sort"
+	"strings"
 
-	"github.com/fearblackcat/smartRaft/node"
-	"github.com/fearblackcat/smartRaft/raft/raftpb"
-	"github.com/fearblackcat/smartRaft/raftsvr"
-	"github.com/fearblackcat/smartRaft/utils/api/snap"
-
-	"git.xiaojukeji.com/gulfstream/dcron/workflow/logtool"
+	"github.com/fearblackcat/swiftRaft/node"
+	"github.com/fearblackcat/swiftRaft/raft/raftpb"
+	"github.com/fearblackcat/swiftRaft/raftsvr"
+	"github.com/fearblackcat/swiftRaft/utils/api/snap"
+	"github.com/fearblackcat/swiftRaft/utils/logtool"
 )
 
-func (a *Agent) setupRaft() {
-	a.eventCh = make(chan event.Event)
-	a.shutdownCh = make(chan struct{})
-	a.proposeC = make(chan string)
-	a.confCHangeC = make(chan raftpb.ConfChange)
-	a.electedCh = make(chan bool)
-	a.errCh = make(chan error)
+type Config struct {
+	Cluster           string
+	AdvertiseRaftAddr string
+	NodeName          string
+	JoinCluster       bool
+	KvPort            int
+	ElectedCh         chan bool
+	ErrCh             chan error
+}
 
-	resmap, peers := a.genMemberList(a.config.Cluster)
+type RaftServer struct {
+	cfg         *Config
+	nodeID      uint64
+	electedCh   chan bool
+	errCh       chan error
+	shutdownCh  chan struct{}
+	proposeC    chan string
+	confCHangeC chan raftpb.ConfChange
+	kvs         *raftsvr.Kvstore
+}
 
-	id := resmap[a.config.NodeName].id
-
-	a.NodeID = id
-
-	cfg := agentConfig{
-		selfPeer:         a.config.AdvertiseRaftAddr,
-		nodeName:         a.config.NodeName,
-		join:             a.config.JoinCluster,
-		proposeC:         a.proposeC,
-		confChangeC:      a.confCHangeC,
-		electedCh:        a.electedCh,
-		errCh:            a.errCh,
-		snapshotterReady: make(chan *snap.Snapshotter, 1),
-		commitC:          make(chan *string),
-		errorC:           make(chan error),
+func NewRaftServer(cfg *Config) *RaftServer {
+	if cfg == nil || cfg.ElectedCh == nil ||
+		cfg.ErrCh == nil || len(cfg.Cluster) == 0 ||
+		len(cfg.AdvertiseRaftAddr) == 0 ||
+		len(cfg.NodeName) == 0 ||
+		cfg.KvPort == 0 {
+		fmt.Fprint(os.Stderr, "manditory fields of configuration is empty \n")
+		return nil
 	}
 
-	logtool.ZLog.Debug(logtool.DLTagUndefined, "gointo the raft setup")
+	r := &RaftServer{}
 
-	logtool.ZLog.Debug(logtool.DLTagUndefined, "new KV store")
+	r.cfg = cfg
+	r.electedCh = make(chan bool)
+	r.errCh = make(chan error)
+	r.shutdownCh = make(chan struct{})
+	r.proposeC = make(chan string)
+	r.confCHangeC = make(chan raftpb.ConfChange)
 
-	genSnapshot := func() ([]byte, error) { return a.kvs.GetSnapshot() }
+	go r.setupRaft()
 
-	logtool.ZLog.Debug(logtool.DLTagUndefined, "ready to new raft node")
+	return r
+}
 
-	node.NewRaftNode(id, peers, resmap, genSnapshot, &cfg)
+func (r *RaftServer) genMemberList(cluster string) (map[string]node.MemberInfo, []string) {
+	var peers []string
 
-	logtool.ZLog.Debug(logtool.DLTagUndefined, "ready to load data to map")
+	resmap := make(map[string]node.MemberInfo)
+	kvs := strings.Split(cluster, ",")
+	for _, v := range kvs {
+		kv := strings.Split(v, "=")
+		peers = append(peers, kv[1])
+	}
+	for _, v := range kvs {
+		kv := strings.Split(v, "=")
+		var b []byte
+		sort.Strings(peers)
+		for _, p := range peers {
+			b = append(b, []byte(p)...)
+		}
 
-	a.kvs = raftsvr.NewKVStore(<-cfg.snapshotterReady, a.proposeC)
+		b = append(b, []byte(kv[0])...)
 
-	go raftsvr.ServeHttpKVAPI(a.kvs, a.config.KvPort, a.confCHangeC, cfg.errorC)
+		hash := sha1.Sum(b)
+		id := binary.BigEndian.Uint64(hash[:8])
+		resmap[kv[0]] = node.MemberInfo{
+			ID:   id,
+			Peer: kv[1],
+		}
+	}
 
-	a.kvs.LoadDataToMap(cfg.commitC, cfg.errorC)
+	return resmap, peers
+}
 
-	logtool.ZLog.Debug(logtool.DLTagUndefined, "ready to serve http kv")
+func (r *RaftServer) setupRaft() {
+	if r == nil {
+		return
+	}
 
-	logtool.ZLog.Debugf(context.TODO(), logtool.DLTagUndefined, "raftKvPort=%d", a.config.KvPort)
+	resMap, peers := r.genMemberList(r.cfg.Cluster)
+
+	id := resMap[r.cfg.NodeName].ID
+
+	r.nodeID = id
+
+	cfg := node.RaftConfig{
+		SelfPeer:      r.cfg.AdvertiseRaftAddr,
+		NodeName:      r.cfg.NodeName,
+		Join:          r.cfg.JoinCluster,
+		ProposeC:      r.proposeC,
+		ConfChangeC:   r.confCHangeC,
+		ElectedCh:     r.electedCh,
+		ErrCh:         r.errCh,
+		SnapshotReady: make(chan *snap.Snapshotter, 1),
+		CommitC:       make(chan *string),
+		ErrorC:        make(chan error),
+	}
+
+	logtool.NLog.Debug("gointo the raft setup")
+
+	logtool.NLog.Debug("new KV store")
+
+	genSnapshot := func() ([]byte, error) { return r.kvs.GetSnapshot() }
+
+	logtool.NLog.Debug("ready to new raft node")
+
+	node.NewRaftNode(id, peers, resMap, genSnapshot, &cfg)
+
+	logtool.NLog.Debug("ready to load data to map")
+
+	r.kvs = raftsvr.NewKVStore(<-cfg.SnapshotReady, r.proposeC)
+
+	go raftsvr.ServeHttpKVAPI(r.kvs, r.cfg.KvPort, r.confCHangeC, cfg.ErrorC)
+
+	r.kvs.LoadDataToMap(cfg.CommitC, cfg.ErrorC)
+
+	logtool.NLog.Debug("ready to serve http kv")
+
+	logtool.NLog.Debugf("raftKvPort=%d", r.cfg.KvPort)
 }
 
 // Leader election routine
-func (a *Agent) runForElection() {
-	logtool.ZLog.Info(logtool.DLTagUndefined, "agent: Running for election")
+func (r *RaftServer) Run() {
+	if r == nil {
+		return
+	}
+	logtool.NLog.Info("agent: Running for election")
 	defer func() {
 		if panicErr := recover(); panicErr != nil {
-			logtool.ZLog.Errorf(context.TODO(), logtool.DLTagUndefined, "op=runForElection||panic=%s||stack=%s", panicErr, string(debug.Stack()))
+			logtool.NLog.Errorf("op=runForElection||panic=%s||stack=%s", panicErr, string(debug.Stack()))
 		}
 	}()
 
 	for {
 		select {
-		case isElected := <-a.electedCh:
+		case isElected := <-r.electedCh:
 			if isElected {
-				logtool.ZLog.Info(logtool.DLTagUndefined, "agent: Cluster leadership acquired")
+				logtool.NLog.Info("agent: Cluster leadership acquired")
 			} else {
-				logtool.ZLog.Info(logtool.DLTagUndefined, "agent: Cluster leadership lost")
+				logtool.NLog.Info("agent: Cluster leadership lost")
 			}
+			go func() {
+				r.cfg.ElectedCh <- isElected
+			}()
 
-		case err := <-a.errCh:
+		case err := <-r.errCh:
 			if err != nil {
-				logtool.ZLog.Infof(context.TODO(), logtool.DLTagUndefined, "err=%s||eader election failed, channel is probably closed", err.Error())
+				logtool.NLog.Infof("err=%s||eader election failed, channel is probably closed", err.Error())
 			}
+			go func() {
+				r.cfg.ErrCh <- err
+			}()
+
 			return
 		}
 	}

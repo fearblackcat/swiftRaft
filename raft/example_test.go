@@ -1,7 +1,7 @@
 package raft
 
 import (
-	pb "github.com/fearblackcat/smartRaft/raft/raftpb"
+	pb "github.com/fearblackcat/swiftRaft/raft/raftpb"
 )
 
 func applyToStore(ents []pb.Entry)    {}

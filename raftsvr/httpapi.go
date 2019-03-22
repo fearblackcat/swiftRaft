@@ -7,7 +7,7 @@ import (
 	"runtime/debug"
 	"strconv"
 
-	"github.com/fearblackcat/smartRaft/raft/raftpb"
+	"github.com/fearblackcat/swiftRaft/raft/raftpb"
 )
 
 // Handler for a http based key-value store backed by raft

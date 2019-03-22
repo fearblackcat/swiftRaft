@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"git.xiaojukeji.com/gulfstream/dcron/workflow/logtool"
-	"github.com/fearblackcat/smartRaft/raft/raftpb"
+	"github.com/fearblackcat/swiftRaft/raft/raftpb"
+	"github.com/fearblackcat/swiftRaft/utils/logtool"
 )
 
 func BenchmarkWrite100EntryWithoutBatch(b *testing.B) { benchmarkWriteEntry(b, 100, 0) }

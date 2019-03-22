@@ -1,0 +1,43 @@
+package: github.com/fearblackcat/swiftRaft
+import:
+- package: github.com/Sirupsen/logrus
+  version: ^1.4.0
+- package: github.com/coreos/go-semver
+  version: ^0.2.0
+  subpackages:
+  - semver
+- package: github.com/coreos/go-systemd
+  version: ^18.0.0
+  subpackages:
+  - journal
+- package: github.com/coreos/pkg
+  version: ^4.0.0
+  subpackages:
+  - capnslog
+- package: github.com/dustin/go-humanize
+  version: ^1.0.0
+- package: github.com/gogo/protobuf
+  version: ^1.2.1
+  subpackages:
+  - gogoproto
+- package: github.com/golang/protobuf
+  version: ^1.3.1
+  subpackages:
+  - proto
+- package: github.com/prometheus/client_golang
+  version: ^0.9.2
+  subpackages:
+  - prometheus
+- package: github.com/xiang90/probing
+  version: ^0.0.2
+- package: go.uber.org/zap
+  version: ^1.9.1
+  subpackages:
+  - zapcore
+- package: golang.org/x/time
+  subpackages:
+  - rate
+- package: google.golang.org/grpc
+  version: ^1.19.1
+  subpackages:
+  - grpclog

@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	pb "github.com/fearblackcat/smartRaft/raft/raftpb"
+	pb "github.com/fearblackcat/swiftRaft/raft/raftpb"
 )
 
 type SnapshotStatus int

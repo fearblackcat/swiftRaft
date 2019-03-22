@@ -17,7 +17,7 @@ CheckLeakedGoroutine verifies tests do not leave any leaky
 goroutines. It returns true when there are goroutines still
 running(leaking) after all tests.
 
-	import "git.xiaojukeji.com/gulfstream/dcron/consistency/pkg/testutil"
+	import "github.com/fearblackcat/swiftRaft/utils/pkg/testutil"
 
 	func TestMain(m *testing.M) {
 		v := m.Run()
@@ -66,13 +66,13 @@ func CheckAfterTest(d time.Duration) error {
 	}
 	var bad string
 	badSubstring := map[string]string{
-		").writeLoop(": "a Transport",
+		").writeLoop(":                                 "a Transport",
 		"created by net/http/httptest.(*Server).Start": "an httptest.Server",
-		"timeoutHandler":        "a TimeoutHandler",
-		"net.(*netFD).connect(": "a timing out dial",
-		").noteClientGone(":     "a closenotifier sender",
-		").readLoop(":           "a Transport",
-		".grpc":                 "a gRPC resource",
+		"timeoutHandler":                               "a TimeoutHandler",
+		"net.(*netFD).connect(":                        "a timing out dial",
+		").noteClientGone(":                            "a closenotifier sender",
+		").readLoop(":                                  "a Transport",
+		".grpc":                                        "a gRPC resource",
 	}
 
 	var stacks string

@@ -17,7 +17,7 @@ const (
 	PrivateDirMode = 0700
 )
 
-var plog = capnslog.NewPackageLogger("git.xiaojukeji.com/gulfstream/dcron", "pkg/fileutil")
+var plog = capnslog.NewPackageLogger("github.com/fearblackcat/swiftRaft", "utils/pkg/fileutil")
 
 // IsDirWriteable checks if dir is writable by writing and removing a file
 // to dir. It returns nil if dir is writable.

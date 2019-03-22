@@ -7,9 +7,9 @@ import (
 	"os"
 	"testing"
 
-	"git.xiaojukeji.com/gulfstream/dcron/workflow/logtool"
-	"github.com/fearblackcat/smartRaft/raft/raftpb"
-	"github.com/fearblackcat/smartRaft/utils/api/wal/walpb"
+	"github.com/fearblackcat/swiftRaft/raft/raftpb"
+	"github.com/fearblackcat/swiftRaft/utils/api/wal/walpb"
+	"github.com/fearblackcat/swiftRaft/utils/logtool"
 )
 
 type corruptFunc func(string, int64) error

@@ -3,7 +3,7 @@ package raft
 import (
 	"testing"
 
-	pb "github.com/fearblackcat/smartRaft/raft/raftpb"
+	pb "github.com/fearblackcat/swiftRaft/raft/raftpb"
 )
 
 var (

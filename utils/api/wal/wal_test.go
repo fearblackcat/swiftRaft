@@ -10,11 +10,11 @@ import (
 	"reflect"
 	"testing"
 
-	"git.xiaojukeji.com/gulfstream/dcron/workflow/logtool"
-	"github.com/fearblackcat/smartRaft/raft/raftpb"
-	"github.com/fearblackcat/smartRaft/utils/api/wal/walpb"
-	"github.com/fearblackcat/smartRaft/utils/pkg/fileutil"
-	"github.com/fearblackcat/smartRaft/utils/pkg/pbutil"
+	"github.com/fearblackcat/swiftRaft/raft/raftpb"
+	"github.com/fearblackcat/swiftRaft/utils/api/wal/walpb"
+	"github.com/fearblackcat/swiftRaft/utils/logtool"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/fileutil"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/pbutil"
 )
 
 func TestNew(t *testing.T) {

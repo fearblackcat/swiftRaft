@@ -9,8 +9,8 @@ import (
 	"reflect"
 	"testing"
 
-	"git.xiaojukeji.com/gulfstream/dcron/workflow/logtool"
-	"github.com/fearblackcat/smartRaft/raft/raftpb"
+	"github.com/fearblackcat/swiftRaft/raft/raftpb"
+	"github.com/fearblackcat/swiftRaft/utils/logtool"
 )
 
 var testSnap = &raftpb.Snapshot{

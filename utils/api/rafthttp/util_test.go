@@ -8,8 +8,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/fearblackcat/smartRaft/raft/raftpb"
-	"github.com/fearblackcat/smartRaft/version"
+	"github.com/fearblackcat/swiftRaft/raft/raftpb"
+	"github.com/fearblackcat/swiftRaft/version"
 
 	"github.com/coreos/go-semver/semver"
 )

@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/fearblackcat/smartRaft/raft"
+	"github.com/fearblackcat/swiftRaft/raft"
 )
 
 // ServerStats encapsulates various statistics about an EtcdServer and its

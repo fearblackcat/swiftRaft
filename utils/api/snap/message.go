@@ -3,8 +3,8 @@ package snap
 import (
 	"io"
 
-	"github.com/fearblackcat/smartRaft/raft/raftpb"
-	"github.com/fearblackcat/smartRaft/utils/pkg/ioutil"
+	"github.com/fearblackcat/swiftRaft/raft/raftpb"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/ioutil"
 )
 
 // Message is a struct that contains a raft Message and a ReadCloser. The type

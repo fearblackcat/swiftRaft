@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"git.xiaojukeji.com/gulfstream/dcron/workflow/logtool"
+	"github.com/fearblackcat/swiftRaft/utils/logtool"
 )
 
 func PurgeFile(lg *logtool.RLogHandle, dirname string, suffix string, max uint, interval time.Duration, stop <-chan struct{}) <-chan error {
@@ -44,7 +44,7 @@ func purgeFile(lg *logtool.RLogHandle, dirname string, suffix string, max uint, 
 				}
 				if err = l.Close(); err != nil {
 					if lg != nil {
-						lg.Warn("failed to unlock/close", map[string]interface{}{"path": l.Name(), "error":err.Error()})
+						lg.Warn("failed to unlock/close", map[string]interface{}{"path": l.Name(), "error": err.Error()})
 					} else {
 						plog.Errorf("error unlocking %s when purging file (%v)", l.Name(), err)
 					}
@@ -52,7 +52,7 @@ func purgeFile(lg *logtool.RLogHandle, dirname string, suffix string, max uint, 
 					return
 				}
 				if lg != nil {
-					lg.Info("purged", map[string]interface{}{"path":f})
+					lg.Info("purged", map[string]interface{}{"path": f})
 				} else {
 					plog.Infof("purged file %s successfully", f)
 				}

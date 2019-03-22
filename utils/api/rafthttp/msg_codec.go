@@ -5,8 +5,8 @@ import (
 	"errors"
 	"io"
 
-	"github.com/fearblackcat/smartRaft/raft/raftpb"
-	"github.com/fearblackcat/smartRaft/utils/pkg/pbutil"
+	"github.com/fearblackcat/swiftRaft/raft/raftpb"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/pbutil"
 )
 
 // messageEncoder is a encoder that can encode all kinds of messages.

@@ -7,7 +7,7 @@ import (
 	"log"
 	"sync"
 
-	"github.com/fearblackcat/smartRaft/utils/api/snap"
+	"github.com/fearblackcat/swiftRaft/utils/api/snap"
 )
 
 // a key-value store backed by raft
@@ -73,7 +73,7 @@ func (s *Kvstore) ReadCommits(commitC <-chan *string, errorC <-chan error) {
 		var dataKv Kv
 		dec := gob.NewDecoder(bytes.NewBufferString(*data))
 		if err := dec.Decode(&dataKv); err != nil {
-			log.Fatalf("dcron raft: could not decode message (%v)", err)
+			log.Fatalf("raft: could not decode message (%v)", err)
 		}
 		s.Mu.Lock()
 		s.KvStore[dataKv.Key] = dataKv.Val

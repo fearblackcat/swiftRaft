@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/fearblackcat/smartRaft/raft/raftpb"
+	"github.com/fearblackcat/swiftRaft/raft/raftpb"
 )
 
 // a network interface

@@ -11,12 +11,12 @@ import (
 	"strings"
 	"time"
 
-	"git.xiaojukeji.com/gulfstream/dcron/workflow/logtool"
-	"github.com/fearblackcat/smartRaft/raft"
-	"github.com/fearblackcat/smartRaft/raft/raftpb"
-	"github.com/fearblackcat/smartRaft/utils/api/snap/snappb"
-	pioutil "github.com/fearblackcat/smartRaft/utils/pkg/ioutil"
-	"github.com/fearblackcat/smartRaft/utils/pkg/pbutil"
+	"github.com/fearblackcat/swiftRaft/raft"
+	"github.com/fearblackcat/swiftRaft/raft/raftpb"
+	"github.com/fearblackcat/swiftRaft/utils/api/snap/snappb"
+	"github.com/fearblackcat/swiftRaft/utils/logtool"
+	pioutil "github.com/fearblackcat/swiftRaft/utils/pkg/ioutil"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/pbutil"
 
 	"github.com/coreos/pkg/capnslog"
 )
@@ -24,7 +24,7 @@ import (
 const snapSuffix = ".snap"
 
 var (
-	plog = capnslog.NewPackageLogger("git.xiaojukeji.com/gulfstream/dcron", "snap")
+	plog = capnslog.NewPackageLogger("github.com/fearblackcat/swiftRaft", "snap")
 
 	ErrNoSnapshot    = errors.New("snap: no available snapshot")
 	ErrEmptySnapshot = errors.New("snap: empty snapshot")

@@ -10,23 +10,23 @@ import (
 	"strconv"
 	"time"
 
-	"git.xiaojukeji.com/gulfstream/dcron/consistency/api/rafthttp"
-	"git.xiaojukeji.com/gulfstream/dcron/consistency/api/snap"
-	stats "git.xiaojukeji.com/gulfstream/dcron/consistency/api/v2stats"
-	"git.xiaojukeji.com/gulfstream/dcron/consistency/api/wal"
-	"git.xiaojukeji.com/gulfstream/dcron/consistency/api/wal/walpb"
-	"git.xiaojukeji.com/gulfstream/dcron/consistency/pkg/fileutil"
-	"git.xiaojukeji.com/gulfstream/dcron/consistency/pkg/types"
-	"git.xiaojukeji.com/gulfstream/dcron/raft"
-	"git.xiaojukeji.com/gulfstream/dcron/raft/raftpb"
-	"git.xiaojukeji.com/gulfstream/dcron/workflow/errhandle"
-	"git.xiaojukeji.com/gulfstream/dcron/workflow/logtool"
-	"git.xiaojukeji.com/gulfstream/dcron/workflow/raftsvr"
+	"github.com/fearblackcat/swiftRaft/raft"
+	"github.com/fearblackcat/swiftRaft/raft/raftpb"
+	"github.com/fearblackcat/swiftRaft/raftsvr"
+	"github.com/fearblackcat/swiftRaft/utils/api/rafthttp"
+	"github.com/fearblackcat/swiftRaft/utils/api/snap"
+	stats "github.com/fearblackcat/swiftRaft/utils/api/v2stats"
+	"github.com/fearblackcat/swiftRaft/utils/api/wal"
+	"github.com/fearblackcat/swiftRaft/utils/api/wal/walpb"
+	"github.com/fearblackcat/swiftRaft/utils/errhandle"
+	"github.com/fearblackcat/swiftRaft/utils/logtool"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/fileutil"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/types"
 )
 
-type memberInfo struct {
-	id   uint64
-	peer string
+type MemberInfo struct {
+	ID   uint64
+	Peer string
 }
 
 // A key-value stream backed by raft
@@ -40,7 +40,7 @@ type raftNode struct {
 	selfPeer    string
 	id          uint64   // client ID for raft session
 	peers       []string // raft peer URLs
-	members     map[string]memberInfo
+	members     map[string]MemberInfo
 	join        bool   // node is joining an existing cluster
 	waldir      string // path to WAL directory
 	snapdir     string // path to snapshot directory
@@ -66,17 +66,17 @@ type raftNode struct {
 	httpdonec chan struct{} // signals http server shutdown complete
 }
 
-type agentConfig struct {
-	selfPeer         string
-	nodeName         string
-	join             bool
-	proposeC         <-chan string
-	confChangeC      <-chan raftpb.ConfChange
-	electedCh        chan bool
-	errCh            chan error
-	snapshotterReady chan *snap.Snapshotter
-	commitC          chan *string
-	errorC           chan error
+type RaftConfig struct {
+	SelfPeer      string
+	NodeName      string
+	Join          bool
+	ProposeC      <-chan string
+	ConfChangeC   <-chan raftpb.ConfChange
+	ElectedCh     chan bool
+	ErrCh         chan error
+	SnapshotReady chan *snap.Snapshotter
+	CommitC       chan *string
+	ErrorC        chan error
 }
 
 var defaultSnapshotCount uint64 = 10000
@@ -86,31 +86,31 @@ var defaultSnapshotCount uint64 = 10000
 // provided the proposal channel. All log entries are replayed over the
 // commit channel, followed by a nil message (to indicate the channel is
 // current), then new log entries. To shutdown, close proposeC and read errorC.
-func NewRaftNode(id uint64, peers []string, members map[string]memberInfo, getSnapshot func() ([]byte, error), cfg *agentConfig) {
+func NewRaftNode(id uint64, peers []string, members map[string]MemberInfo, getSnapshot func() ([]byte, error), cfg *RaftConfig) {
 
 	rc := &raftNode{
-		proposeC:    cfg.proposeC,
-		confChangeC: cfg.confChangeC,
-		commitC:     cfg.commitC,
-		errorC:      cfg.errorC,
+		proposeC:    cfg.ProposeC,
+		confChangeC: cfg.ConfChangeC,
+		commitC:     cfg.CommitC,
+		errorC:      cfg.ErrorC,
 		id:          id,
-		selfPeer:    cfg.selfPeer,
-		nodeName:    cfg.nodeName,
+		selfPeer:    cfg.SelfPeer,
+		nodeName:    cfg.NodeName,
 		peers:       peers,
 		members:     members,
-		join:        cfg.join,
-		waldir:      fmt.Sprintf("dcronRaft-%s", cfg.nodeName),
-		snapdir:     fmt.Sprintf("dcronRaft-%s-snap", cfg.nodeName),
+		join:        cfg.Join,
+		waldir:      fmt.Sprintf("raft-%s", cfg.NodeName),
+		snapdir:     fmt.Sprintf("raft-%s-snap", cfg.NodeName),
 		getSnapshot: getSnapshot,
 		snapCount:   defaultSnapshotCount,
 		stopc:       make(chan struct{}),
 		httpstopc:   make(chan struct{}),
 		httpdonec:   make(chan struct{}),
 
-		snapshotterReady: cfg.snapshotterReady,
+		snapshotterReady: cfg.SnapshotReady,
 		// rest of structure populated after WAL replay
 	}
-	go rc.startRaft(cfg.electedCh, cfg.errCh)
+	go rc.startRaft(cfg.ElectedCh, cfg.ErrCh)
 }
 
 func (rc *raftNode) saveSnap(snap raftpb.Snapshot) error {
@@ -200,7 +200,7 @@ func (rc *raftNode) publishEntries(ents []raftpb.Entry) bool {
 func (rc *raftNode) loadSnapshot() *raftpb.Snapshot {
 	snapshot, err := rc.snapshotter.Load()
 	if err != nil && err != snap.ErrNoSnapshot {
-		logtool.RLog.Fatal("dcron raft: error loading snapshot", map[string]interface{}{
+		logtool.RLog.Fatal("raft: error loading snapshot", map[string]interface{}{
 			"error": err,
 		})
 	}
@@ -211,14 +211,14 @@ func (rc *raftNode) loadSnapshot() *raftpb.Snapshot {
 func (rc *raftNode) openWAL(snapshot *raftpb.Snapshot) *wal.WAL {
 	if !wal.Exist(rc.waldir) {
 		if err := os.Mkdir(rc.waldir, 0750); err != nil {
-			logtool.RLog.Fatal("dcron raft: cannot create dir for wal ", map[string]interface{}{
+			logtool.RLog.Fatal("raft: cannot create dir for wal ", map[string]interface{}{
 				"error": err,
 			})
 		}
 
 		w, err := wal.Create(logtool.RLog, rc.waldir, nil)
 		if err != nil {
-			logtool.RLog.Fatal("dcron raft: create wal error ", map[string]interface{}{
+			logtool.RLog.Fatal("raft: create wal error ", map[string]interface{}{
 				"error": err,
 			})
 		}
@@ -235,7 +235,7 @@ func (rc *raftNode) openWAL(snapshot *raftpb.Snapshot) *wal.WAL {
 	})
 	w, err := wal.Open(logtool.RLog, rc.waldir, walsnap)
 	if err != nil {
-		logtool.RLog.Fatal("dcron raft: error loading wal (%v)", map[string]interface{}{
+		logtool.RLog.Fatal("raft: error loading wal (%v)", map[string]interface{}{
 			"error": err,
 		})
 	}
@@ -252,7 +252,7 @@ func (rc *raftNode) replayWAL() *wal.WAL {
 	w := rc.openWAL(snapshot)
 	_, st, ents, err := w.ReadAll()
 	if err != nil {
-		logtool.RLog.Fatal("dcron raft: failed to read WAL ", map[string]interface{}{
+		logtool.RLog.Fatal("raft: failed to read WAL ", map[string]interface{}{
 			"error": err,
 		})
 	}
@@ -284,7 +284,7 @@ func (rc *raftNode) writeError(err error) {
 func (rc *raftNode) startRaft(electedCh chan bool, errCh chan error) {
 	if !fileutil.Exist(rc.snapdir) {
 		if err := os.Mkdir(rc.snapdir, 0750); err != nil {
-			logtool.RLog.Fatal("dcron raft: cannot create dir for snapshot", map[string]interface{}{
+			logtool.RLog.Fatal("raft: cannot create dir for snapshot", map[string]interface{}{
 				"error": err,
 			})
 		}
@@ -294,11 +294,11 @@ func (rc *raftNode) startRaft(electedCh chan bool, errCh chan error) {
 
 	hostname, err := os.Hostname()
 	if err != nil {
-		logtool.ZLog.Fatal(logtool.DLTagUndefined, err.Error())
+		logtool.NLog.Fatal(err.Error())
 	}
-	logtool.InitRaftLogger("debug", hostname, "./raftLog", "raft")
+	logtool.InitRaftLogger("debug", hostname)
 
-	logtool.InitNodeMsgLogger("debug", hostname, "./nodeMsg", "raftNode")
+	logtool.InitNodeMsgLogger("debug", hostname)
 
 	oldwal := wal.Exist(rc.waldir)
 	rc.wal = rc.replayWAL()
@@ -306,7 +306,7 @@ func (rc *raftNode) startRaft(electedCh chan bool, errCh chan error) {
 	rpeers := make([]raft.Peer, len(rc.peers))
 	var i = 0
 	for _, v := range rc.members {
-		rpeers[i] = raft.Peer{ID: v.id}
+		rpeers[i] = raft.Peer{ID: v.ID}
 		i++
 	}
 	c := &raft.Config{
@@ -343,7 +343,7 @@ func (rc *raftNode) startRaft(electedCh chan bool, errCh chan error) {
 	rc.transport.Start()
 	for k, v := range rc.members {
 		if k != rc.nodeName {
-			rc.transport.AddPeer(types.ID(v.id), []string{v.peer})
+			rc.transport.AddPeer(types.ID(v.ID), []string{v.Peer})
 		}
 	}
 
@@ -528,14 +528,14 @@ func (rc *raftNode) serveChannels(electedCh chan bool, errCh chan error) {
 func (rc *raftNode) serveRaft() {
 	url, err := url.Parse(rc.selfPeer)
 	if err != nil {
-		logtool.RLog.Fatal("dcron raft: Failed parsing URL", map[string]interface{}{
+		logtool.RLog.Fatal("raft: Failed parsing URL", map[string]interface{}{
 			"error": err,
 		})
 	}
 
 	ln, err := raftsvr.NewStoppableListener(url.Host, rc.httpstopc)
 	if err != nil {
-		logtool.RLog.Fatal("dcron raft: Failed to listen rafthttp", map[string]interface{}{
+		logtool.RLog.Fatal("raft: Failed to listen rafthttp", map[string]interface{}{
 			"error": err,
 		})
 	}
@@ -544,7 +544,7 @@ func (rc *raftNode) serveRaft() {
 	select {
 	case <-rc.httpstopc:
 	default:
-		logtool.RLog.Fatal("dcron raft: Failed to serve rafthttp", map[string]interface{}{
+		logtool.RLog.Fatal("raft: Failed to serve rafthttp", map[string]interface{}{
 			"error": err,
 		})
 	}

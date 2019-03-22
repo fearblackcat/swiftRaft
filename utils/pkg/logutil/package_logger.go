@@ -13,7 +13,7 @@ var _ Logger = &packageLogger{}
 // For example:
 //
 //  var defaultLogger Logger
-//  defaultLogger = NewPackageLogger("git.xiaojukeji.com/gulfstream/dcron", "snapshot")
+//  defaultLogger = NewPackageLogger("github.com/fearblackcat/swiftRaft", "snapshot")
 //
 func NewPackageLogger(repo, pkg string) Logger {
 	return &packageLogger{p: capnslog.NewPackageLogger(repo, pkg)}

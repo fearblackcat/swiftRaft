@@ -4,8 +4,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/fearblackcat/smartRaft/utils/pkg/fileutil"
-	"git.xiaojukeji.com/gulfstream/dcron/workflow/logtool"
+	"github.com/fearblackcat/swiftRaft/utils/logtool"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/fileutil"
 )
 
 const (
@@ -44,7 +44,7 @@ func (s *ServerAttach) GoAttach(f func()) {
 	defer s.WgMu.RUnlock()
 	select {
 	case <-s.Stopping:
-		logtool.ZLog.Warn(logtool.DLTagUndefined, "server has stopped; skipping goAttach")
+		logtool.NLog.Warn("server has stopped; skipping goAttach")
 		return
 	default:
 	}

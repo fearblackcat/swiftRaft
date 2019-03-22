@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"git.xiaojukeji.com/gulfstream/dcron/workflow/logtool"
-	"github.com/fearblackcat/smartRaft/utils/pkg/fileutil"
+	"github.com/fearblackcat/swiftRaft/utils/logtool"
+	"github.com/fearblackcat/swiftRaft/utils/pkg/fileutil"
 )
 
 var errBadWALName = errors.New("bad wal name")
